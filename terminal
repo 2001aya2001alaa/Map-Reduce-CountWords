@@ -1,0 +1,629 @@
+(base) [bigdata@192 ~]$ start-all.sh
+This script is Deprecated. Instead use start-dfs.sh and start-yarn.sh
+Starting namenodes on [localhost]
+localhost: starting namenode, logging to /home/bigdata/hadoop-2.7.3/logs/hadoop-bigdata-namenode-192.168.1.11.out
+localhost: starting datanode, logging to /home/bigdata/hadoop-2.7.3/logs/hadoop-bigdata-datanode-192.168.1.11.out
+Starting secondary namenodes [0.0.0.0]
+0.0.0.0: starting secondarynamenode, logging to /home/bigdata/hadoop-2.7.3/logs/hadoop-bigdata-secondarynamenode-192.168.1.11.out
+starting yarn daemons
+starting resourcemanager, logging to /home/bigdata/hadoop-2.7.3/logs/yarn-bigdata-resourcemanager-localhost.localdomain.out
+localhost: starting nodemanager, logging to /home/bigdata/hadoop-2.7.3/logs/yarn-bigdata-nodemanager-192.168.1.11.out
+
+(base) [bigdata@192 ~]$ jps
+2825 DataNode
+3610 Jps
+3035 SecondaryNameNode
+3307 NodeManager
+3196 ResourceManager
+2716 NameNode
+
+(base) [bigdata@192 ~]$ hdfs dfs -ls /
+Found 4 items
+drwxr-xr-x   - bigdata supergroup          0 2022-09-17 10:07 /datasource
+drwxr-xr-x   - bigdata supergroup          0 2022-09-17 10:11 /datatarget
+drwx------   - bigdata supergroup          0 2022-09-21 22:03 /tmp
+drwxr-xr-x   - bigdata supergroup          0 2021-07-03 16:15 /user
+
+(base) [bigdata@192 ~]$ hdfs dfs -mkdir /MR
+
+(base) [bigdata@192 ~]$ hdfs dfs -put Desktop/words.txt /MR/words.txt
+
+(base) [bigdata@192 ~]$ /home/bigdata/hadoop-2.7.3/bin/hadoop jar /home/bigdata/hadoop-2.7.3/share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar -file /home/bigdata/mapper.py -mapper /home/bigdata/mapper.py -file /home/bigdata/reducer.py -reducer /home/bigdata/reducer.py -input /MR/words.txt -output /MR/output
+22/10/05 17:15:58 WARN streaming.StreamJob: -file option is deprecated, please use generic option -files instead.
+packageJobJar: [/home/bigdata/mapper.py, /home/bigdata/reducer.py, /tmp/hadoop-unjar6564113414451117711/] [] /tmp/streamjob8514878856070429461.jar tmpDir=null
+22/10/05 17:16:00 INFO client.RMProxy: Connecting to ResourceManager at /0.0.0.0:8032
+22/10/05 17:16:00 INFO client.RMProxy: Connecting to ResourceManager at /0.0.0.0:8032
+22/10/05 17:16:01 INFO mapred.FileInputFormat: Total input paths to process : 1
+22/10/05 17:16:01 INFO mapreduce.JobSubmitter: number of splits:2
+22/10/05 17:16:01 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1664981487585_0004
+22/10/05 17:16:02 INFO impl.YarnClientImpl: Submitted application application_1664981487585_0004
+22/10/05 17:16:02 INFO mapreduce.Job: The url to track the job: http://192.168.1.11:8088/proxy/application_1664981487585_0004/
+22/10/05 17:16:02 INFO mapreduce.Job: Running job: job_1664981487585_0004
+22/10/05 17:16:11 INFO mapreduce.Job: Job job_1664981487585_0004 running in uber mode : false
+22/10/05 17:16:11 INFO mapreduce.Job:  map 0% reduce 0%
+22/10/05 17:16:25 INFO mapreduce.Job:  map 50% reduce 0%
+22/10/05 17:16:26 INFO mapreduce.Job:  map 100% reduce 0%
+22/10/05 17:16:36 INFO mapreduce.Job:  map 100% reduce 100%
+22/10/05 17:16:36 INFO mapreduce.Job: Job job_1664981487585_0004 completed successfully
+22/10/05 17:16:36 INFO mapreduce.Job: Counters: 50
+	File System Counters
+		FILE: Number of bytes read=8546440
+		FILE: Number of bytes written=17458444
+		FILE: Number of read operations=0
+		FILE: Number of large read operations=0
+		FILE: Number of write operations=0
+		HDFS: Number of bytes read=5462467
+		HDFS: Number of bytes written=717768
+		HDFS: Number of read operations=9
+		HDFS: Number of large read operations=0
+		HDFS: Number of write operations=2
+	Job Counters 
+		Killed map tasks=1
+		Launched map tasks=2
+		Launched reduce tasks=1
+		Data-local map tasks=2
+		Total time spent by all maps in occupied slots (ms)=24913
+		Total time spent by all reduces in occupied slots (ms)=8253
+		Total time spent by all map tasks (ms)=24913
+		Total time spent by all reduce tasks (ms)=8253
+		Total vcore-milliseconds taken by all map tasks=24913
+		Total vcore-milliseconds taken by all reduce tasks=8253
+		Total megabyte-milliseconds taken by all map tasks=25510912
+		Total megabyte-milliseconds taken by all reduce tasks=8451072
+	Map-Reduce Framework
+		Map input records=124456
+		Map output records=901325
+		Map output bytes=6743784
+		Map output materialized bytes=8546446
+		Input split bytes=172
+		Combine input records=0
+		Combine output records=0
+		Reduce input groups=67505
+		Reduce shuffle bytes=8546446
+		Reduce input records=901325
+		Reduce output records=67505
+		Spilled Records=1802650
+		Shuffled Maps =2
+		Failed Shuffles=0
+		Merged Map outputs=2
+		GC time elapsed (ms)=475
+		CPU time spent (ms)=13950
+		Physical memory (bytes) snapshot=729653248
+		Virtual memory (bytes) snapshot=3068846080
+		Total committed heap usage (bytes)=503840768
+	Shuffle Errors
+		BAD_ID=0
+		CONNECTION=0
+		IO_ERROR=0
+		WRONG_LENGTH=0
+		WRONG_MAP=0
+		WRONG_REDUCE=0
+	File Input Format Counters 
+		Bytes Read=5462295
+	File Output Format Counters 
+		Bytes Written=717768
+22/10/05 17:16:36 INFO streaming.StreamJob: Output directory: /MR/output
+
+(base) [bigdata@192 ~]$ hdfs dfs -ls /MR
+Found 2 items
+drwxr-xr-x   - bigdata supergroup          0 2022-10-05 17:16 /MR/output
+-rw-r--r--   1 bigdata supergroup    5458199 2022-10-05 16:55 /MR/words.txt
+
+(base) [bigdata@192 ~]$ hdfs dfs -ls /MR/output
+Found 2 items
+-rw-r--r--   1 bigdata supergroup          0 2022-10-05 17:16 /MR/output/_SUCCESS
+-rw-r--r--   1 bigdata supergroup     717768 2022-10-05 17:16 /MR/output/part-00000
+
+(base) [bigdata@192 ~]$ hdfs dfs -cat /MR/output/part-00000
+worthy.	1
+worts!	1
+worts.	1
+wot	22
+wot'st	1
+wot,	3
+wot,'	1
+wot.	2
+wot;	1
+wots	2
+wouid	1
+would	1974
+would"	1
+would'st	1
+would,	27
+would,'	1
+would-	2
+would.	10
+would;	3
+would?	2
+wouldest	1
+wouldst	109
+wouldst,	1
+wouldst?	2
+wound	43
+wound!	1
+wound,	13
+wound.	7
+wound;	3
+wound?	3
+wounded	26
+wounded,	2
+wounded.	4
+wounded?	4
+wounding	3
+wounding,	2
+wounding;	1
+woundings	1
+woundless	1
+wounds	51
+wounds!	2
+wounds'	1
+wounds,	14
+wounds-	1
+wounds.	6
+wounds;	2
+wounds?	3
+woven	3
+wrack	1
+wrack!	1
+wrack'd	1
+wrack)	1
+wrack,	1
+wrackful	1
+wrangle	6
+wrangle.	1
+wrangler	1
+wranglers,	1
+wrangling	7
+wrangling;	1
+wrap	5
+wrapp'd	4
+wraps	1
+wrapt	1
+wrath	21
+wrath!	2
+wrath's	1
+wrath,	18
+wrath-	1
+wrath.	7
+wrath:	1
+wrath;	3
+wrath?	1
+wrathful	11
+wrathful,	2
+wrathfully;	1
+wraths	1
+wraths,	1
+wreak	4
+wreakful	2
+wreaks,	1
+wreath	3
+wreath'd	1
+wreathed	2
+wreaths	1
+wreaths;	1
+wreck	10
+wreck'd	7
+wreck'd,	1
+wreck'd.	1
+wreck,	9
+wreck-	1
+wreck.	3
+wreck;	3
+wreck?	1
+wrecked)	1
+wrecked,	1
+wrecks,	1
+wren	3
+wren's	1
+wren,	2
+wren.	1
+wrench'd	2
+wrench-	1
+wrenching	2
+wrenching.	1
+wrens	1
+wrest	4
+wrest,	1
+wrested	2
+wrestle	6
+wrestle]	1
+wrestled	2
+wrestled?	1
+wrestler	4
+wrestler's	1
+wrestler,	1
+wrestler;	1
+wrestler?	1
+wrestling	3
+wrestling,	3
+wrestling.	2
+wrestling?	2
+wretch	22
+wretch!	9
+wretch's	2
+wretch,	24
+wretch.	1
+wretch?	1
+wretchcd	1
+wretched	55
+wretched'st	1
+wretched,	6
+wretched-	1
+wretched.	1
+wretched;	1
+wretched?	1
+wretchedness	7
+wretchedness.	1
+wretchedness?	1
+wretches	5
+wretches!	1
+wretches,	5
+wretches;	1
+wring	11
+wring,	1
+wringer.	1
+wringing	3
+wringing!	1
+wrings	4
+wrinkle	5
+wrinkled	9
+wrinkled,	2
+wrinkled;	1
+wrinkles	10
+wrinkles!	1
+wrinkles,	1
+wrist	1
+wrist,	1
+wrists;	1
+writ	67
+writ,	13
+writ.	7
+writ:	3
+writ;	3
+writ?	3
+write	89
+write!	1
+write,	13
+write.	2
+writer	1
+writer,	1
+writers	7
+writes	16
+writes,	2
+writes.	3
+writes;	1
+writes]	1
+writhled	1
+writing	13
+writing,	4
+writing.	4
+writings.	1
+writs	1
+written	29
+written,	4
+written?	1
+wrong	112
+wrong!	2
+wrong'd	26
+wrong'd,	6
+wrong'd-	1
+wrong'd.	4
+wrong'd;	1
+wrong'st	6
+wrong,	47
+wrong,'	1
+wrong-	2
+wrong-incensed	1
+wrong-it	1
+wrong-should	1
+wrong.	39
+wrong:	1
+wrong;	16
+wrong?	4
+wronged	11
+wronged,	1
+wronged.	3
+wronger	1
+wronger,	1
+wronger;	1
+wrongful	2
+wrongfully	3
+wrongfully,	2
+wrongfully.	2
+wrongfully?	1
+wronging	1
+wrongly	1
+wrongs	40
+wrongs!	1
+wrongs,	9
+wrongs.	11
+wrongs:	1
+wrongs;	9
+wrongs?	2
+wronk:	1
+wrote	7
+wrote;	1
+wrote?	1
+wroth.	1
+wrought	34
+wrought,	4
+wrought.	1
+wrought:	1
+wrung	5
+wry-neck'd	1
+wrying	1
+wul	1
+x	1
+y	2
+y'	1
+y'are	15
+y'have	2
+y-clad	1
+yard	5
+yard,	2
+yard.	3
+yards	3
+yards,	2
+yare	2
+yare!	1
+yare,	3
+yare;	2
+yarely	1
+yarely,	1
+yarn	1
+yarn,	1
+yaw	1
+yawn	3
+yawn'd,	1
+yawn,	2
+yawning	3
+ycleped	1
+ycliped	1
+ye	184
+ye!	11
+ye!-	1
+ye'll	1
+ye,	34
+ye-	2
+ye.	18
+ye:	2
+ye;	11
+ye?	4
+yea	12
+yea,	41
+yea.	2
+yea?	1
+year	47
+year!	5
+year'	1
+year's	3
+year,	17
+year.	15
+year:	1
+year;	5
+year?	1
+yearly	3
+yearn	1
+yearns	2
+years	101
+years!	1
+years'	12
+years,	42
+years-	3
+years.	14
+years:	1
+years;	8
+years?	4
+yeas,	2
+yeast	1
+yell	1
+yell'd	1
+yell;	1
+yellow	24
+yellow,	1
+yellow.	1
+yellow;	1
+yellowing	1
+yellowness;	1
+yellows,	1
+yells	1
+yelping	1
+yeoman	4
+yeoman's	1
+yeoman.	3
+yeoman?	2
+yeomen	1
+yeomen!	1
+yeomen's	1
+yeomen,	1
+yerk'd	1
+yes,	17
+yes.	3
+yes:	2
+yes;	3
+yesterday	11
+yesterday,	9
+yesterday.	2
+yesterday:	1
+yesterday;	1
+yesterdays	1
+yesternight	7
+yesternight,	2
+yesternight.	2
+yesternight;	1
+yesty	2
+yet	930
+yet!	8
+yet'	1
+yet'!	1
+yet,	102
+yet-	6
+yet.	50
+yet.'	3
+yet:	2
+yet;	22
+yet?	23
+yew	4
+yew,	2
+yicld	1
+yield	104
+yield!	1
+yield,	12
+yield.	9
+yield;	1
+yield?	1
+yielded	16
+yielded,	2
+yielded.	2
+yielded;	3
+yielder,	1
+yielder-up	1
+yielders	1
+yielding	12
+yielding,	2
+yielding-	1
+yielding.	2
+yields	12
+yok'd	2
+yoke	18
+yoke,	5
+yoke-devils	1
+yoke.	1
+yoke.'	1
+yoke;	3
+yoke?	1
+yoked	3
+yokefellow	1
+yokes	2
+yoketh	1
+yon	14
+yond	32
+yond,	1
+yond.	1
+yond?	1
+yonder	42
+yonder's	3
+yonder,	7
+yonder.	2
+yonder;	1
+yonder?	4
+yongrey	1
+yore.	1
+you	9081
+you!	94
+you!'	1
+you!-	4
+you'	3
+you'-	1
+you'-That	1
+you'.	1
+you';	1
+you'?	1
+you'R	1
+you'd	11
+you'fl	1
+you'ld	1
+you'll	102
+you're	15
+you'st	1
+you,	1428
+you-	45
+you--	1
+you--you	1
+you-I	1
+you-he	1
+you-often	1
+you-pray	1
+you-that	1
+you-well,	1
+you-wondrous	1
+you.	811
+you.'	4
+you.-	5
+you:	29
+you;	261
+you?	259
+you?'	3
+young	345
+young'	1
+young's	1
+young'st	1
+young,	36
+young-ey'd	1
+young.	9
+young;	8
+young?	2
+younger	26
+younger,	2
+younger.	2
+youngest	21
+youngest,	1
+youngest;	1
+younglings,	1
+youngly	2
+younker	3
+your	6009
+your-	1
+your@login	1
+yours	77
+yours!	3
+yours,	60
+yours-	5
+yours--	1
+yours-not	1
+yours.	63
+yours.'	1
+yours:	4
+yours;	21
+yours?	12
+yourself	146
+yourself!	3
+yourself,	46
+yourself.	42
+yourself:	5
+yourself;	17
+yourself?	9
+yourselves	33
+yourselves!	1
+yourselves,	16
+yourselves.	15
+yourselves:	1
+yourselves;	3
+yourselves?	4
+youth	142
+youth!	6
+youth's	5
+youth,	73
+youth-	3
+youth.	24
+youth.'	1
+youth:	1
+youth;	15
+youth?	5
+youthful	29
+youthful,	2
+youths	4
+youtli	1
+zanies.	1
+zany,	1
+zeal	20
+zeal!	1
+zeal,	7
+zeal.	4
+zealous	6
+zeals,	1
+zed!	1
+zenith	1
+zephyrs	1
+zip	1
+zir,	1
+zir.	1
+zo	1
+zodiac	1
+zodiacs	1
+zone,	1
+zounds!	1
+zounds,	1
+zwagger'd	1
+}	2
+(base) [bigdata@192 ~]$ 
